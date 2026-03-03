@@ -1,0 +1,18 @@
+<!DOCTYPE html><html><head>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head><body>
+<div id="map" style="height:95vh"></div>
+<script>
+const map = L.map('map').setView([23.8,90.4],12);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+const marker = L.marker([23.8,90.4]).addTo(map);
+
+async function upd(){
+  const r = await fetch('https://api.thingspeak.com/channels/3274323/feeds/last.json?read_key=5UR6BT58FHL9G0B1');
+  const d = await r.json();
+  const la=+d.field1, lo=+d.field2;
+  marker.setLatLng([la,lo]); map.panTo([la,lo]);
+}
+upd(); setInterval(upd,8000);   // প্রতি 8 sec
+</script></body></html>
